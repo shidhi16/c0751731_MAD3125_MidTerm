@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">c0751731_MAD3125_MidTerm</string>
+    <string name="Login">Login</string>
+    <string name="Email">Email ID</string>
+    <string name="Password">Password</string>
+    <string name="EnterEmail">Please Enter Email ID</string>
+    <string name="EnterPassword">Please Enter Password</string>
+    <string name="enterCredentials">Kindly enter correct credentials</string>
 </resources>
