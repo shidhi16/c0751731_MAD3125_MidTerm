@@ -1,39 +1,120 @@
 package com.example.c0751731_mad3125_midterm.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.example.c0751731_mad3125_midterm.BaseActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.c0751731_mad3125_midterm.R;
+import com.example.c0751731_mad3125_midterm.Utilities.Validation;
+import com.example.c0751731_mad3125_midterm.pojoUsers.Users;
 
-public class LoginScreenActivity extends BaseActivity {
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-    BaseActivity mActivity = LoginScreenActivity.this;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+public class LoginScreenActivity extends AppCompatActivity {
+
+    AppCompatActivity mActivity = LoginScreenActivity.this;
     private static final String TAG = "LoginScreenActivity";
 
     private EditText edtEmail;
     private EditText edtPassword;
     private Button btnLogin;
 
+
+    String userFile;
+
+    private ArrayList<Users> usersArrayList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.login_activity);
-
         initView();
-
+        readFromString();
+        try {
+            userFile = readUsers("Users");
+        } catch (Exception E) {
+            E.printStackTrace();
+        }
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.e(TAG, "onClick: ");
-                login();
+                if (isValid()){
+                    if (checkFromList(edtEmail.getText().toString(),
+                            edtPassword.getText().toString()))
+                    {
+                        startActivity(new Intent(mActivity , HomeScreenActivity.class));
+                    }else {
+                        Toast.makeText(mActivity,"Wrong Credentials Entered",Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
+
+    private void readFromString() {
+
+            try {
+
+                JSONArray userJsonArray = new JSONArray(userFile);
+
+                for (int i =0 ; i<userJsonArray.length() ;i++){
+                    Users users = new Users();
+                    JSONObject userObject = userJsonArray.getJSONObject(i);
+                    users.setUserID(userObject.getInt("userID"));
+                    users.setUserEmail(userObject.getString("userEmail"));
+                    users.setUserPassword(userObject.getString("userPassword"));
+                    usersArrayList.add(users);
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        public String readUsers(String fileName) throws IOException
+        {
+            BufferedReader reader = null;
+            reader = new BufferedReader(new InputStreamReader(getAssets().open(fileName), "UTF-8"));
+
+            String content = "";
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                content = content + line;
+            }
+
+            return content;
+
+        }
+
+
+
+    private boolean checkFromList(String email, String password) {
+
+        for (int i =0 ; i<usersArrayList.size(); i++) {
+            if (usersArrayList.get(i).getUserEmail().equalsIgnoreCase(email)) {
+                if (usersArrayList.get(i).getUserPassword().equalsIgnoreCase(password)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     private void initView() {
 
@@ -42,23 +123,26 @@ public class LoginScreenActivity extends BaseActivity {
         btnLogin = (Button) findViewById(R.id.btnLogin);
     }
 
-    private boolean login() {
+    private boolean isValid() {
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
 
         if (email.isEmpty() || email.trim().length() == 0) {
             edtEmail.setError("Enter Email ID");
             return false;
-        }
-
-        if (password.isEmpty() || password.trim().length() == 0) {
-            edtPassword.setError("Enter Password");
+        }else if (!Validation.isValidEmail(email)){
+            edtEmail.setError("Enter Valid Email ID");
             return false;
         }
-
-
+       else if (password.isEmpty() || password.trim().length() == 0) {
+            edtPassword.setError("Enter Password");
+            return false;
+        }else if (!Validation.isValidPassword(password)){
+            edtPassword.setError("Enter Valid Password");
+        }
         return true;
 
     }
+
 
 }

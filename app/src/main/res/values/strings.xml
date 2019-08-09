@@ -3,7 +3,8 @@
     <string name="Login">Login</string>
     <string name="Email">Email ID</string>
     <string name="Password">Password</string>
-    <string name="EnterEmail">Please Enter Email ID</string>
-    <string name="EnterPassword">Please Enter Password</string>
+    <string name="EnterEmail">Please Enter valid Email ID</string>
+    <string name="EnterPassword">Please Enter correct Password</string>
     <string name="enterCredentials">Kindly enter correct credentials</string>
+    <string name="dismiss" />
 </resources>
