@@ -1,6 +1,7 @@
 package com.example.c0751731_mad3125_midterm.Activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,50 +11,54 @@ import com.example.c0751731_mad3125_midterm.R;
 
 public class LoginScreenActivity extends BaseActivity {
 
-        private EditText edtEmail;
-        private EditText edtPassword;
-        private Button btnLogin;
+    BaseActivity mActivity = LoginScreenActivity.this;
+    private static final String TAG = "LoginScreenActivity";
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+    private EditText edtEmail;
+    private EditText edtPassword;
+    private Button btnLogin;
 
-            setContentView(R.layout.login_activity);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-            initView();
+        setContentView(R.layout.login_activity);
 
-            btnLogin.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    login();
-                }
-            });
-        }
+        initView();
 
-        private void initView()
-        {
-
-           edtEmail = (EditText)findViewById(R.id.edtEmail);
-            edtPassword = (EditText)findViewById(R.id.edtPassword);
-            btnLogin = (Button)findViewById(R.id.btnLogin);
-        }
-
-        private void login()
-        {
-            String email = edtEmail.getText().toString();
-            String password = edtPassword.getText().toString();
-
-            if (email.isEmpty() || email.trim().length() == 0)
-            {
-                edtEmail.setError("Enter Email ID");
-                return;
-
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "onClick: ");
+                login();
             }
-
-
-        }
+        });
     }
 
+    private void initView() {
 
+        edtEmail = (EditText) findViewById(R.id.edtEmail);
+        edtPassword = (EditText) findViewById(R.id.edtPassword);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+    }
+
+    private boolean login() {
+        String email = edtEmail.getText().toString();
+        String password = edtPassword.getText().toString();
+
+        if (email.isEmpty() || email.trim().length() == 0) {
+            edtEmail.setError("Enter Email ID");
+            return false;
+        }
+
+        if (password.isEmpty() || password.trim().length() == 0) {
+            edtPassword.setError("Enter Password");
+            return false;
+        }
+
+
+        return true;
+
+    }
+
+}
