@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.example.c0751731_mad3125_midterm.BaseActivity;
+import com.example.c0751731_mad3125_midterm.MySharedPref;
 import com.example.c0751731_mad3125_midterm.R;
 
 public class SplashScreenActivity extends BaseActivity
@@ -19,9 +20,25 @@ public class SplashScreenActivity extends BaseActivity
             public void run() {
                 try {
                     sleep(3000);
-                    Intent intent = new Intent(getApplicationContext(), LoginScreenActivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    if (MySharedPref.readString(SplashScreenActivity.this,MySharedPref.isLogin,null)!=null){
+
+                        if (MySharedPref.readString(SplashScreenActivity.this,MySharedPref.isLogin,"True").equalsIgnoreCase("True")){
+                            Intent intent = new Intent(getApplicationContext(), SatelliteActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            Intent intent = new Intent(getApplicationContext(), LoginScreenActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                    }else {
+                        Intent intent = new Intent(getApplicationContext(), LoginScreenActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
                 }
                 catch
                 (InterruptedException e){

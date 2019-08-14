@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.c0751731_mad3125_midterm.MySharedPref;
 import com.example.c0751731_mad3125_midterm.R;
 import com.example.c0751731_mad3125_midterm.Utilities.Validation;
 import com.example.c0751731_mad3125_midterm.pojoUsers.Users;
@@ -42,21 +43,30 @@ public class LoginScreenActivity extends AppCompatActivity {
 
         setContentView(R.layout.login_activity);
         initView();
-        readFromString();
         try {
-            userFile = readUsers("Users");
-        } catch (Exception E) {
-            E.printStackTrace();
+          userFile =  readUsers("users");
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        readFromString();
+
+        for (int i =0 ; i< usersArrayList.size() ; i++){
+            Log.e(TAG, "email: "+usersArrayList.get(i).getUserEmail() );
+            Log.e(TAG, "password: "+usersArrayList.get(i).getUserPassword() );
+            Log.e(TAG, "............................." );
+        }
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.e(TAG, "onClick: ");
                 if (isValid()){
                     if (checkFromList(edtEmail.getText().toString(),
-                            edtPassword.getText().toString()))
-                    {
-                        startActivity(new Intent(mActivity , HomeScreenActivity.class));
+                            edtPassword.getText().toString())) {
+
+                        MySharedPref.writeString(mActivity,MySharedPref.isLogin,"True");
+                        MySharedPref.writeString(mActivity,MySharedPref.emailId,edtEmail.getText().toString());
+                        startActivity(new Intent(mActivity , SatelliteActivity.class));
                     }else {
                         Toast.makeText(mActivity,"Wrong Credentials Entered",Toast.LENGTH_SHORT).show();
                     }
@@ -66,11 +76,8 @@ public class LoginScreenActivity extends AppCompatActivity {
     }
 
     private void readFromString() {
-
             try {
-
                 JSONArray userJsonArray = new JSONArray(userFile);
-
                 for (int i =0 ; i<userJsonArray.length() ;i++){
                     Users users = new Users();
                     JSONObject userObject = userJsonArray.getJSONObject(i);
@@ -104,10 +111,13 @@ public class LoginScreenActivity extends AppCompatActivity {
 
 
     private boolean checkFromList(String email, String password) {
-
+        Log.e(TAG, "email: "+email );
+        Log.e(TAG, "password: "+password );
         for (int i =0 ; i<usersArrayList.size(); i++) {
             if (usersArrayList.get(i).getUserEmail().equalsIgnoreCase(email)) {
+                Log.e(TAG, "email found: " );
                 if (usersArrayList.get(i).getUserPassword().equalsIgnoreCase(password)) {
+                    Log.e(TAG, "password found: ." );
                     return true;
                 }
             }

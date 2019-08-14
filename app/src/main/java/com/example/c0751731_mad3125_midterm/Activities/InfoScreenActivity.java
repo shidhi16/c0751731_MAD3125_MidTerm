@@ -2,43 +2,61 @@ package com.example.c0751731_mad3125_midterm.Activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.c0751731_mad3125_midterm.R;
+import com.example.c0751731_mad3125_midterm.pojo.Satelite;
 
 public class InfoScreenActivity extends AppCompatActivity {
     SharedPreferences preferences;
-    String  image,s_name,m_name,details,local_d;
-    ImageView img_view; TextView missionname,satname,date;
+    ImageView imgSat;
+    TextView tvMissionName;
+    TextView tvFlightNo;
+    //TextView tvLaunchDate;
+    TextView tvLaunchYear;
+    TextView tvMissionID;
+    TextView tvDesc;
+    Button btnWiki;
+
+
+    Satelite modal ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_activity);
         setTitle("Details");
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        image = preferences.getString("image", "");
-        s_name = preferences.getString("s_name", "");
-        m_name = preferences.getString("m_name", "");
-        details = preferences.getString("details", "");
-        local_d = preferences.getString("local_d", "");
+
+        if (getIntent().getExtras()!=null){
+            modal = (Satelite) getIntent().getSerializableExtra("data");
+        }
+
+        tvMissionName =  findViewById(R.id.tvMissionName);
+        imgSat = findViewById(R.id.imgSat);
+        tvMissionName.setText(modal.getMissionName());
+
+        tvFlightNo = findViewById(R.id.tvFlightNo);
+        tvFlightNo.setText(modal.getFlightNumber());
+        //tvLaunchDate.setText(modal.getLaunchDateUnix());
+
+        tvLaunchYear = findViewById(R.id.tvLaunchYear);
+        tvLaunchYear.setText(modal.getLaunchYear());
+        tvMissionID = findViewById(R.id.tvMissionID);
+        tvMissionID.setText(modal.getMissionId());
+
+        tvDesc = findViewById(R.id.tvDesc);
+        tvDesc.setText(modal.getDetails());
+
+        btnWiki = findViewById(R.id.btn_wiki);
 
 
-        missionname =  findViewById(R.id.missionname);
-        satname =  findViewById(R.id.rocketname);
-        //description =  findViewById(R.id.description);
-        date =  findViewById(R.id.date);
-        img_view =  findViewById(R.id.img_detail);
 
-        missionname.setText(m_name);
-        satname.setText(s_name);
-        //description.setText(details);
-        date.setText(local_d);
-        missionname.setText(m_name);
-//        Glide.with(this).load(image).into(img_view);
+        Glide.with(this).load(modal.getLinks().getMissionPatchSmall()).into(imgSat);
+
 
 
     }
